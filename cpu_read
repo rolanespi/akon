@@ -2,7 +2,7 @@
 
 const { Controller, Tag } = require("ethernet-ip");
  
-const PLC = new Controller();
+const CPU= new Controller();
  
 // Create Tag Instances
 const fooTag = new Tag("AA_TEST1"); // Controller Scope Tag
@@ -10,16 +10,16 @@ const barTag = new Tag("AA_TEST2"); // Program Scope Tag in PLC Program "prog"
  
 //var t=0;
 
-PLC.connect("192.168.15.231",1).then(() => {
+CPU.connect("192.168.15.231",1).then(() => {
 
 //initiialization only
-PLC.readTag(fooTag);
-PLC.readTag(barTag);
+CPU.readTag(fooTag);
+CPU.readTag(barTag);
 start();
 
 //t=500;
 });
- //   await PLC.readTag(fooTag);
+ 
 
 
 function start()
@@ -33,8 +33,8 @@ setInterval(myFunction,200);
 
 
 function myFunction(){
-   PLC.readTag(fooTag);
-   PLC.readTag(barTag);
+   CPU.readTag(fooTag);
+   CPU.readTag(barTag);
 
    console.log(fooTag.value);
    console.log(barTag.value);
