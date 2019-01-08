@@ -3,7 +3,10 @@ var app=express();// this varable as functon
 const { Controller, Tag } = require("ethernet-ip");
  
 
-var TXDATA=0;// to be transmitted
+
+
+var TXDATA='';//0;// to be transmitted
+var j=',';// kapit sa string
 
 var server=app.listen(3000);
 app.use(express.static('public'));//host html fles nsied fublc
@@ -42,12 +45,8 @@ function newConnection(socket)
 {
 	console.log('new socket connected=> '+socket.id);
 	//socket.emit('message',{'message':'Hello,from Server '});// so to send meesgae to server ,use the emit and use "message" and coressponding
-   setInterval(function()
-   {
-	//socket.emit('date',{'date':Data2SEND(1,100)});
-    socket.emit('date',{'date':TXDATA});
-
-	},500);
+   socket.emit('date',{'date':TXDATA});
+  //bug changes here, remove double timer,GIS
 
 }//new connections
 
@@ -65,16 +64,22 @@ setInterval(myFunction,100);
 
 function myFunction(){
 
-	  CPU.readTag(fooTag);
+   CPU.readTag(fooTag);
    CPU.readTag(barTag);
-
-   console.log(fooTag.value);
-   console.log(barTag.value);
-   TXDATA=fooTag.value;
+   
+   //console.log("typeof fooTag =>"+typeof(fooTag));//object
+   var st1=JSON.stringify(fooTag.value);
+   var st2=JSON.stringify(barTag.value);
+   var totalString=st1+j+st2;// where j is the ','
+   //var st2=toString(barTag.value);
+   console.log(totalString);
+   //console.log(fooTag.value);
+   //console.log(barTag.value);
+   TXDATA=totalString;
 }
 
 
-
+/*
 
 
 
@@ -92,3 +97,6 @@ function Data2SEND(minNum, maxNum)//:Number):Number
 {
     return (Math.floor(Math.random() * (maxNum - minNum + 1)) + minNum);
 }
+
+
+*/
