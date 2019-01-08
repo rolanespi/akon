@@ -1,0 +1,94 @@
+var express=require('express');
+var app=express();// this varable as functon
+const { Controller, Tag } = require("ethernet-ip");
+ 
+
+var TXDATA=0;// to be transmitted
+
+var server=app.listen(3000);
+app.use(express.static('public'));//host html fles nsied fublc
+console.log("server runnng@mY desktop");
+
+
+//socket
+
+var socket=require('socket.io');
+//var socket=require('C:/Users/robeana2018/Downloads/projectforline6/success1/success1/node_modules/socket.io');
+var io=socket(server);
+const CPU = new Controller();
+ 
+// Create Tag Instances
+const fooTag = new Tag("AA_TEST1"); // Controller Scope Tag
+const barTag = new Tag("AA_TEST2"); // Program Scope Tag in CPU Program "prog"
+ 
+//var t=0;
+
+CPU.connect("192.168.15.231",1).then(() => {
+//	/initiialization only
+CPU.readTag(fooTag);
+CPU.readTag(barTag);
+start();
+
+
+});
+
+
+
+io.sockets.on('connection',newConnection);
+/* this means that when io.sockets.on has new client connected
+its execute this function new connection and display to console
+*/
+function newConnection(socket)
+{
+	console.log('new socket connected=> '+socket.id);
+	//socket.emit('message',{'message':'Hello,from Server '});// so to send meesgae to server ,use the emit and use "message" and coressponding
+   setInterval(function()
+   {
+	//socket.emit('date',{'date':Data2SEND(1,100)});
+    socket.emit('date',{'date':TXDATA});
+
+	},500);
+
+}//new connections
+
+
+
+function start()
+
+{
+
+
+setInterval(myFunction,100);
+
+}
+
+
+function myFunction(){
+
+	  CPU.readTag(fooTag);
+   CPU.readTag(barTag);
+
+   console.log(fooTag.value);
+   console.log(barTag.value);
+   TXDATA=fooTag.value;
+}
+
+
+
+
+
+
+function sendPacket(data)
+{
+ 
+console.log('data=>'+data);
+}
+
+
+///you can change the randomRange as Data2SEND
+
+//function randomRange(minNum, maxNum)//:Number):Number 
+function Data2SEND(minNum, maxNum)//:Number):Number 
+{
+    return (Math.floor(Math.random() * (maxNum - minNum + 1)) + minNum);
+}
